@@ -16,6 +16,8 @@ typedef unsigned long long int ull;
 typedef long double ld;
 
 //template ends
+using namespace std;
+
 template <typename T, typename U>
 struct seg_tree_lazy
 {
@@ -61,8 +63,7 @@ struct seg_tree_lazy
 	{
 		for (int l = i / 2; l; l /= 2)
 		{
-			T combined = value[2 * l] + value[2 * l + 1];
-			value[l] = prop[l](combined);
+			value[l] = value[2 * l] + value[2 * l + 1];
 		}
 	}
 
@@ -118,34 +119,21 @@ struct seg_tree_lazy
 
 struct node
 {
-	int max_rows;
-	int last_row;
+	ll sum;
+	ll width;
+
 	node operator+(const node &n)
 	{
-		return max(*this, n);
-	}
-	friend bool operator<(const node &lhs, const node &rhs)
-	{
-		return lhs.max_rows < rhs.max_rows;
+		return {sum ^ n.sum, n.width + width};
 	}
 };
 
 struct update
 {
-	int new_max_rows;
-	int new_last_row;
-	bool no_op;
-
+	ll value;
 	node operator()(const node &n)
 	{
-		if (no_op)
-		{
-			return n;
-		}
-		else
-		{
-			return {new_max_rows, new_last_row};
-		}
+		return {value, n.width};
 	}
 
 	update operator+(const update &u)
@@ -153,59 +141,30 @@ struct update
 		return u;
 	}
 };
+
 int main()
 {
 	ios_base::sync_with_stdio(false);
 	cin.tie(NULL);
 	cout.tie(NULL);
-	int n, m;
-	cin >> n >> m;
-	vector<vii> segs(n);
-	set<int> coords;
-	for (int j = 0; j < m; j++)
-	{
-		int i, l, r;
-		cin >> i >> l >> r;
-		segs[i - 1].push_back({l - 1, r - 1});
-		coords.insert(l - 1);
-		coords.insert(r - 1);
-	}
-	map<int, int> comp;
-	int j = 0;
-	for (auto c : coords)
-	{
-		comp[c] = j;
-		j++;
-	}
-	seg_tree_lazy<node, update> st(comp.size(), {0, -1}, {0, -1, true});
-	vi dp(n, -1);
+
+	ll n, q;
+	cin >> n >> q;
+
+	seg_tree_lazy<node, update> st(n, {(ll)1e17, 0}, {0});
+	vector<node> leaves(n, {0, 1});
+	st.set_leaves(leaves);
+
 	for (int i = 0; i < n; i++)
 	{
-		node mx = {0, -1};
-		for (auto s : segs[i])
-		{
-			mx = max(mx, st.query(comp[s.first], comp[s.second]));
-		}
-		dp[i] = mx.last_row;
-		mx.max_rows++;
-		mx.last_row = i;
-		for (auto s : segs[i])
-		{
-			st.upd(comp[s.first], comp[s.second], {mx.max_rows, mx.last_row, false});
-		}
+		ll temp;
+		cin >> temp;
+		st.upd(i, i, {temp});
 	}
-	node last = st.query(0, comp.size() - 1);
-	cout << n - last.max_rows << "\n";
-	for (int i = n - 1; i >= 0; i--)
+	for (int i = 0; i < q; i++)
 	{
-		if (i != last.last_row)
-		{
-			cout << i + 1 << " ";
-		}
-		else
-		{
-			last.last_row = dp[last.last_row];
-		}
+		ll a, b;
+		cin >> a >> b;
+		cout << st.query(a - 1, b - 1).sum << "\n";
 	}
-	return 0;
 }

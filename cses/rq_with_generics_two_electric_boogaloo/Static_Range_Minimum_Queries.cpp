@@ -118,94 +118,50 @@ struct seg_tree_lazy
 
 struct node
 {
-	int max_rows;
-	int last_row;
+	ll min_val;
+
 	node operator+(const node &n)
 	{
-		return max(*this, n);
-	}
-	friend bool operator<(const node &lhs, const node &rhs)
-	{
-		return lhs.max_rows < rhs.max_rows;
+		return {min(min_val, n.min_val)};
 	}
 };
 
 struct update
 {
-	int new_max_rows;
-	int new_last_row;
-	bool no_op;
+	ll value;
 
 	node operator()(const node &n)
 	{
-		if (no_op)
-		{
-			return n;
-		}
-		else
-		{
-			return {new_max_rows, new_last_row};
-		}
+		return {n.min_val};
 	}
 
 	update operator+(const update &u)
 	{
-		return u;
+		return {value};
 	}
 };
+
 int main()
 {
 	ios_base::sync_with_stdio(false);
 	cin.tie(NULL);
 	cout.tie(NULL);
-	int n, m;
-	cin >> n >> m;
-	vector<vii> segs(n);
-	set<int> coords;
-	for (int j = 0; j < m; j++)
-	{
-		int i, l, r;
-		cin >> i >> l >> r;
-		segs[i - 1].push_back({l - 1, r - 1});
-		coords.insert(l - 1);
-		coords.insert(r - 1);
-	}
-	map<int, int> comp;
-	int j = 0;
-	for (auto c : coords)
-	{
-		comp[c] = j;
-		j++;
-	}
-	seg_tree_lazy<node, update> st(comp.size(), {0, -1}, {0, -1, true});
-	vi dp(n, -1);
+
+	int n, q;
+	cin >> n >> q;
+
+	seg_tree_lazy<node, update> st(n, {(ll)1e17}, {(ll)1e17});
+	vector<node> leaves(n, {0});
+
 	for (int i = 0; i < n; i++)
 	{
-		node mx = {0, -1};
-		for (auto s : segs[i])
-		{
-			mx = max(mx, st.query(comp[s.first], comp[s.second]));
-		}
-		dp[i] = mx.last_row;
-		mx.max_rows++;
-		mx.last_row = i;
-		for (auto s : segs[i])
-		{
-			st.upd(comp[s.first], comp[s.second], {mx.max_rows, mx.last_row, false});
-		}
+		cin >> leaves[i].min_val;
 	}
-	node last = st.query(0, comp.size() - 1);
-	cout << n - last.max_rows << "\n";
-	for (int i = n - 1; i >= 0; i--)
+	st.set_leaves(leaves);
+	for (int i = 0; i < q; i++)
 	{
-		if (i != last.last_row)
-		{
-			cout << i + 1 << " ";
-		}
-		else
-		{
-			last.last_row = dp[last.last_row];
-		}
+		int a, b;
+		cin >> a >> b;
+		cout << st.query(a - 1, b - 1).min_val << "\n";
 	}
-	return 0;
 }
