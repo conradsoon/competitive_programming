@@ -19,31 +19,43 @@ typedef long double ld;
 //template ends
 void solve()
 {
-	int n, x;
-	cin >> n >> x;
-	vvi dp(n + 1, vi(x + 1));
-	vi h(n + 1);
-	for (int i = 1; i <= n; i++)
+	int n;
+	cin >> n;
+	vll c(n);
+	vll pfx(n);
+	pfx[0] = c[0];
+	for (int i = 0; i < n; i++)
 	{
-		cin >> h[i];
-	}
-	vi s(n + 1);
-	for (int i = 1; i <= n; i++)
-	{
-		cin >> s[i];
-	}
-	for (int i = 1; i <= n; i++)
-	{
-		for (int j = 0; j <= x; j++)
+		cin >> c[i];
+		if (i % 2)
 		{
-			dp[i][j] = dp[i - 1][j];
-			if (j - h[i] >= 0)
-			{
-				dp[i][j] = max(dp[i][j], dp[i - 1][j - h[i]] + s[i]);
-			}
+			c[i] = -c[i];
 		}
 	}
-	cout << dp[n][x] << "\n";
+	ull count = 0;
+	for (int i = 1; i < n; i++)
+	{
+		pfx[i] = c[i] + pfx[i - 1];
+	}
+	for (int i = 0; i < n; i += 2)
+	{
+		for (int j = n - 1 - (n % 2); j > i; j -= 2)
+		{
+			ll bal = pfx[j - 1] - pfx[i];
+			ll l = c[i];
+			ll r = c[j];
+			if (bal > 0)
+			{
+				r += bal;
+			}
+			if (bal < 0)
+			{
+				l -= bal;
+			}
+			count += (ull)max(min(l, abs(r)), (ll)0);
+		}
+	}
+	cout << count;
 }
 int main()
 {

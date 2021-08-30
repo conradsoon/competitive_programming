@@ -1,4 +1,3 @@
-
 #include <bits/stdc++.h>
 
 using namespace std;
@@ -19,37 +18,51 @@ typedef long double ld;
 //template ends
 void solve()
 {
-	int n, x;
-	cin >> n >> x;
-	vvi dp(n + 1, vi(x + 1));
-	vi h(n + 1);
+	int n, q;
+	cin >> n >> q;
+	string s;
+	cin >> s;
+	vi pfx(n + 1);
+	pfx[0] = 0;
 	for (int i = 1; i <= n; i++)
 	{
-		cin >> h[i];
+		int mul = (i % 2 ? 1 : -1);
+		int num = (s[i - 1] == '+' ? 1 : -1);
+		pfx[i] = pfx[i - 1] + mul * num;
 	}
-	vi s(n + 1);
-	for (int i = 1; i <= n; i++)
+	while (q--)
 	{
-		cin >> s[i];
-	}
-	for (int i = 1; i <= n; i++)
-	{
-		for (int j = 0; j <= x; j++)
+		int l, r;
+		cin >> l >> r;
+		int sv_sum;
+		if (l % 2)
 		{
-			dp[i][j] = dp[i - 1][j];
-			if (j - h[i] >= 0)
-			{
-				dp[i][j] = max(dp[i][j], dp[i - 1][j - h[i]] + s[i]);
-			}
+			sv_sum = pfx[r] - pfx[l - 1];
+		}
+		else
+		{
+			sv_sum = -(pfx[r] - pfx[l - 1]);
+		}
+		if (sv_sum == 0)
+		{
+			cout << "0\n";
+		}
+		else
+		{
+			cout << ((r - l + 1) % 2 ? 1 : 2) << "\n";
 		}
 	}
-	cout << dp[n][x] << "\n";
 }
 int main()
 {
 	ios_base::sync_with_stdio(false);
 	cin.tie(NULL);
 	cout.tie(NULL);
-	solve();
+	int t;
+	cin >> t;
+	while (t--)
+	{
+		solve();
+	}
 	return 0;
 }

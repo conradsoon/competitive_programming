@@ -19,37 +19,43 @@ typedef long double ld;
 //template ends
 void solve()
 {
-	int n, x;
-	cin >> n >> x;
-	vvi dp(n + 1, vi(x + 1));
-	vi h(n + 1);
-	for (int i = 1; i <= n; i++)
+	int a, b;
+	cin >> a >> b;
+	set<int> k;
+	//wlog let a be the bigger one.
+	if (a < b)
 	{
-		cin >> h[i];
+		swap(a, b);
 	}
-	vi s(n + 1);
-	for (int i = 1; i <= n; i++)
+	//ABAB
+	int s_1 = a - ((a + b + 1) / 2);
+	for (int i = 0; i <= b; i++)
 	{
-		cin >> s[i];
+		k.insert(s_1 + i * 2);
 	}
-	for (int i = 1; i <= n; i++)
+	//BABA
+	int s_2 = a - ((a + b) / 2);
+	for (int i = 0; i <= b; i++)
 	{
-		for (int j = 0; j <= x; j++)
-		{
-			dp[i][j] = dp[i - 1][j];
-			if (j - h[i] >= 0)
-			{
-				dp[i][j] = max(dp[i][j], dp[i - 1][j - h[i]] + s[i]);
-			}
-		}
+		k.insert(s_2 + i * 2);
 	}
-	cout << dp[n][x] << "\n";
+	cout << k.size() << "\n";
+	for (auto c : k)
+	{
+		cout << c << " ";
+	}
+	cout << "\n";
 }
 int main()
 {
 	ios_base::sync_with_stdio(false);
 	cin.tie(NULL);
 	cout.tie(NULL);
-	solve();
+	int t;
+	cin >> t;
+	while (t--)
+	{
+		solve();
+	}
 	return 0;
 }

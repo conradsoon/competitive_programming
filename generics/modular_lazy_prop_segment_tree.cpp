@@ -48,7 +48,7 @@ struct seg_tree_lazy
 		for (int l = i / 2; l; l /= 2)
 		{
 			T combined = value[2 * l] + value[2 * l + 1];
-			value[l] = prop[l](combined);
+			value[l] = prop[l](combined); //define a no-op boolean for funkier shit.
 		}
 	}
 

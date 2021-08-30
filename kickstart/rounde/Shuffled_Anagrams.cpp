@@ -17,84 +17,43 @@ typedef unsigned long long int ull;
 typedef long double ld;
 
 //template ends
-bool check(string s, string _s)
-{
-	bool isOk = true;
-	for (int i = 0; i < s.size(); i++)
-	{
-		if (s[i] == _s[i])
-		{
-			isOk = false;
-			break;
-		}
-	}
-	return isOk;
-}
 void solve(int n)
 {
 	string s;
 	cin >> s;
-	map<char, vi> p;
-	for (int i = 0; i < s.size(); i++)
+	map<char, int> mp;
+	for (auto c : s)
 	{
-		p[s[i]].push_back(i);
+		mp[c]++;
 	}
-	bool isPossible = true;
-	for (auto kv : p)
+	vector<pair<int, char>> f;
+	for (auto kv : mp)
 	{
-		if (kv.second.size() > s.length() / 2)
-		{
-			isPossible = false;
-		}
+		f.push_back({kv.second, kv.first});
 	}
-	if (isPossible)
+	sort(f.begin(), f.end());
+	reverse(f.begin(), f.end());
+	if (f[0].first <= s.size() / 2)
 	{
-		vvi groups;
-		vector<bool> used(s.size(), false);
-		for (int i = 0; i < s.size(); i++)
+		string _s = string(s.size(), 'X');
+		for (int i = 0; i < f.size(); i++)
 		{
-			if (!used[i])
+			int k = (i + 1) % f.size();
+			for (int j = 0; j < s.size(); j++)
 			{
-				used[i] = true;
-				for (int j = i; j < s.size(); j++)
+				if (s[j] == f[i].second)
 				{
-					if (!used[j])
+					while (f[k].first == 0)
 					{
-						groups.push_back({i, j});
-						used[j] = true;
-						break;
+						k += 1;
+						k %= f.size();
 					}
+					f[k].first--;
+					_s[j] = f[k].second;
 				}
 			}
 		}
-		if (s.size() % 2 == 1)
-		{
-			for (int i = 0; i < groups.size(); i++)
-			{
-				bool pos = true;
-				for (auto idx : groups[i])
-				{
-					if (s[idx] == s.back())
-					{
-						pos = false;
-						break;
-					}
-				}
-				if (pos)
-				{
-					groups[i].push_back(s.size() - 1);
-					break;
-				}
-			}
-		}
-		for (auto g : groups)
-		{
-			for (int i = 0; i < g.size() - 1; i++)
-			{
-				swap(s[g[i]], s[g[i + 1]]);
-			}
-		}
-		cout << "Case #" << n << ": " << s << "\n";
+		cout << "Case #" << n << ": " + _s << "\n";
 	}
 	else
 	{
