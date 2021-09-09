@@ -42,7 +42,9 @@ void solve()
 		for (int j = n - 1 - (n % 2); j > i; j -= 2)
 		{
 			ll bal = pfx[j - 1] - pfx[i];
-			ll l = c[i];
+			ll min_bal = -1e10;
+			for (int k = i + 1;)
+				ll l = c[i];
 			ll r = c[j];
 			if (bal > 0)
 			{
