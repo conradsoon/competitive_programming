@@ -6,5 +6,4 @@
 **/blank.cpp
 **/tc.cpp
 **/template.cpp
-!codeforces/blank.cpp
-!codeforces/tc.cpp
+!generics/tc.cpp
