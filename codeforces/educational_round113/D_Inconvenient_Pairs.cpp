@@ -29,50 +29,73 @@ void solve()
 {
 	int n, m, k;
 	cin >> n >> m >> k;
-	vi v_s(n);
-	set<int> set_v_s;
-	for (int i = 0; i < n; i++)
+	vi v(n);
+	for (auto &x : v)
 	{
-		cin >> v_s[i];
-		set_v_s.insert(v_s[i]);
+		cin >> x;
 	}
-	map<int, ll> v;
-	vi h_s(m);
-	set<int> set_h_s;
-	for (int i = 0; i < m; i++)
+	vi h(m);
+	for (auto &x : h)
 	{
-		cin >> h_s[i];
-		set_h_s.insert(h_s[i]);
+		cin >> x;
 	}
-	map<int, ll> h;
+	vll h_s(n);
+	vll v_s(m);
+	map<pii, ll> same_str_hori;
+	map<pii, ll> same_str_vert;
 	for (int i = 0; i < k; i++)
 	{
-		int temp1, temp2;
-		cin >> temp1 >> temp2;
-		bool onVert = set_v_s.find(temp1) != set_v_s.end();
-		bool onHori = set_h_s.find(temp2) != set_h_s.end();
-		if (!(onVert & onHori))
+		int x, y;
+		cin >> x >> y;
+		bool onHori = false;
+		bool onVert = false;
+		int hori;
+		int vert;
+		//find hori str
+		auto lbv = lower_bound(v.begin(), v.end(), x);
+		auto lbh = lower_bound(h.begin(), h.end(), y);
+		if (x == *lbv)
 		{
-			if (onVert)
-			{
-				v[temp1]++;
-			}
+			onVert = true;
+		}
+		if (y == *lbh)
+		{
+			onHori = true;
+		}
+		if (!(onHori & onVert))
+		{
+			hori = lbv - v.begin();
+			vert = lbh - h.begin();
 			if (onHori)
 			{
-				h[temp2]++;
+				same_str_hori[{hori, vert}]++;
+				h_s[hori]++;
+			}
+			if (onVert)
+			{
+				same_str_vert[{hori, vert}]++;
+				v_s[vert]++;
 			}
 		}
 	}
-	ll ans = 0;
-	for (auto kv : v)
+	ll count = 0;
+	for (auto x : h_s)
 	{
-		ans += (kv.second) * (kv.second - 1);
+		count += x * (x - 1) / 2;
 	}
-	for (auto kv : h)
+	for (auto x : v_s)
 	{
-		ans += (kv.second) * (kv.second - 1);
+		count += x * (x - 1) / 2;
 	}
-	cout << ans << "\n";
+	for (auto kv : same_str_hori)
+	{
+		count -= kv.second * (kv.second - 1) / 2;
+	}
+	for (auto kv : same_str_vert)
+	{
+		count -= kv.second * (kv.second - 1) / 2;
+	}
+	cout << count << "\n";
 }
 
 int main()

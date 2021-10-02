@@ -1,3 +1,4 @@
+//https://codeforces.com/blog/entry/11080
 #include <ext/pb_ds/assoc_container.hpp>
 using namespace __gnu_pbds;
 typedef tree<int, null_type, less<int>, rb_tree_tag,
