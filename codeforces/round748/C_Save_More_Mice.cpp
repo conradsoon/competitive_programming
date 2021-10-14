@@ -20,10 +20,10 @@ using vvl = vector<vl>;
 #define mp make_pair
 #define sz(c) ((int)(c).size())
 #define all(c) (c).begin(), (c).end()
-#define forn(i, a, b) for (int i = a, end = (b); i < end; i++)       //[a,b)
+#define forn(i, a, b) for (int i = a, end = (b); i < end; i++)		 //[a,b)
 #define fornr(i, a, b) for (int i = b - 1, end = (a); i >= end; i--) //[a,b) reversed
-#define repn(i, a, b) for (int i = a, end = (b); i <= end; i++)      //[a,b]
-#define repnr(i, a, b) for (int i = b, end = (a); i >= end; i--)     //[a,b] reversed
+#define rep(i, a, b) for (int i = a, end = (b); i <= end; i++)		 //[a,b]
+#define repr(i, a, b) for (int i = b, end = (a); i >= end; i--)		 //[a,b] reversed
 #define setmin(a, b) a = min(a, (b))
 #define setmax(a, b) a = max(a, (b))
 #define NIL 0
@@ -42,22 +42,46 @@ using namespace std;
 using namespace __gnu_pbds;
 typedef tree<pair<int, int>, null_type, less<pair<int, int>>, rb_tree_tag, tree_order_statistics_node_update> ordered_set;
 
-void solve(int tc)
+void solve()
 {
-    int n;
-    cin >> n;
+	int n, k;
+	cin >> n >> k;
+	priority_queue<int> pq;
+	int c = 0;
+	int cat = 0;
+	forn(i, 0, k)
+	{
+		int temp;
+		cin >> temp;
+		pq.push(temp);
+	}
+	while (!pq.empty())
+	{
+		int m = pq.top();
+		if (m > cat)
+		{
+			pq.pop();
+			c++; //lol
+			cat += n - m;
+		}
+		else
+		{
+			break;
+		}
+	}
+	cout << c << "\n";
 }
 
 int main()
 {
-    ios_base::sync_with_stdio(false);
-    cin.tie(NULL);
-    cout.tie(NULL);
-    int t;
-    cin >> t;
-    repn(i, 1, t)
-    {
-        solve(i);
-    }
-    return 0;
+	ios_base::sync_with_stdio(false);
+	cin.tie(NULL);
+	cout.tie(NULL);
+	int t;
+	cin >> t;
+	while (t--)
+	{
+		solve();
+	}
+	return 0;
 }
