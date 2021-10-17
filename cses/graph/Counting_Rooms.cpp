@@ -13,8 +13,6 @@ using vii = vector<pii>;
 using vll = vector<pll>;
 using vvi = vector<vi>;
 using vvl = vector<vl>;
-using vb = vector<char>; //char faster
-using vvb = vector<vector<char>>;
 
 #define fi first
 #define se second
@@ -22,10 +20,10 @@ using vvb = vector<vector<char>>;
 #define mp make_pair
 #define sz(c) ((int)(c).size())
 #define all(c) (c).begin(), (c).end()
-#define forn(i, a, b) for (int i = a, end = (b); i < end; i++)       //[a,b)
+#define forn(i, a, b) for (int i = a, end = (b); i < end; i++)		 //[a,b)
 #define fornr(i, a, b) for (int i = b - 1, end = (a); i >= end; i--) //[a,b) reversed
-#define repn(i, a, b) for (int i = a, end = (b); i <= end; i++)      //[a,b]
-#define repnr(i, a, b) for (int i = b, end = (a); i >= end; i--)     //[a,b] reversed
+#define repn(i, a, b) for (int i = a, end = (b); i <= end; i++)		 //[a,b]
+#define repnr(i, a, b) for (int i = b, end = (a); i >= end; i--)	 //[a,b] reversed
 #define setmin(a, b) a = min(a, (b))
 #define setmax(a, b) a = max(a, (b))
 #define NIL 0
@@ -44,22 +42,70 @@ using namespace std;
 using namespace __gnu_pbds;
 typedef tree<pair<int, int>, null_type, less<pair<int, int>>, rb_tree_tag, tree_order_statistics_node_update> ordered_set;
 
-void solve(int tc)
-{
-    int n;
-    cin >> n;
-}
-
 int main()
 {
-    ios_base::sync_with_stdio(false);
-    cin.tie(NULL);
-    cout.tie(NULL);
-    int t;
-    cin >> t;
-    repn(i, 1, t)
-    {
-        solve(i);
-    }
-    return 0;
+	ios_base::sync_with_stdio(false);
+	cin.tie(NULL);
+	cout.tie(NULL);
+	int n, m;
+	cin >> n >> m;
+	vector<vector<char>> v(n, vector<char>(m, true));
+	forn(i, 0, n)
+	{
+		string t;
+		cin >> t;
+		forn(j, 0, m)
+		{
+			if (t[j] == '.')
+			{
+				v[i][j] = false;
+			}
+		}
+	}
+	ll c = 0;
+	forn(i, 0, n)
+	{
+		forn(j, 0, m)
+		{
+			if (!v[i][j])
+			{
+				c++;
+				stack<pii> s;
+				s.push({i, j});
+				while (!s.empty())
+				{
+					pii f = s.top();
+					v[f.fi][f.se] = true;
+					s.pop();
+					f.fi--;
+					if (f.fi >= 0 && !v[f.fi][f.se])
+					{
+						s.push(f);
+					}
+					f.fi++;
+					f.se--;
+					if (f.se >= 0 && !v[f.fi][f.se])
+					{
+						s.push(f);
+					}
+					f.se++;
+					f.fi++;
+					if (f.fi < n && !v[f.fi][f.se])
+					{
+						s.push(f);
+					}
+					f.fi--;
+					f.se++;
+					if (f.se < m && !v[f.fi][f.se])
+					{
+						s.push(f);
+					}
+					f.se--;
+				}
+			}
+		}
+	}
+	cout << c;
+
+	return 0;
 }

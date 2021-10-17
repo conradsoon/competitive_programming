@@ -35,7 +35,7 @@ mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 const long double eps = 1e-9;
 const long long mod = 1000000007;
 const int MAXN = 200005;
-
+const int MAXITR = 40;
 #include <ext/pb_ds/assoc_container.hpp>
 #include <ext/pb_ds/tree_policy.hpp>
 using namespace std;
@@ -63,28 +63,7 @@ bool check_ok(vi &a, int num)
 	}
 	return flag;
 }
-void f(vll &pf, ll &mx, vi &a, ll i, ll fac)
-{
-	if (fac > 10e6 + 5)
-	{
-		return;
-	}
-	if (i == sz(pf))
-	{
-		if (fac > mx && check_ok(a, fac))
-		{
-			setmax(mx, fac);
-		}
-		return;
-	}
-	int pwr = fac;
-	f(pf, mx, a, i + 1, pwr);
-	repn(j, 1, pf[i].se)
-	{
-		pwr *= pf[i].fi;
-		f(pf, mx, a, i + 1, pwr);
-	}
-}
+
 void solve(vi &pr)
 {
 	int n;
@@ -96,7 +75,6 @@ void solve(vi &pr)
 		cin >> a[i];
 		fa[a[i]]++;
 	}
-	sort(all(a));
 	//check if half of as are the same
 	for (auto kv : fa)
 	{
@@ -106,29 +84,58 @@ void solve(vi &pr)
 			return;
 		}
 	}
-	auto stop = upper_bound(all(pr), a.back() + 5);
-	vll pf;
-	for (auto itr = stop; itr >= pr.begin(); itr--)
-	{
-		if (check_ok(a, *itr))
-		{
-			pf.pb({*itr, 1});
-		}
-	}
 	ll ans = 1;
-	for (auto &x : pf)
+	forn(t, 0, MAXITR)
 	{
-		ll f = x.fi;
-		ll i = 1;
-		while (check_ok(a, f * x.fi))
+		uniform_int_distribution<> distr(0, sz(a) - 1);
+		ll a_idx = distr(rng);
+		ll b_idx = distr(rng);
+		while (b_idx == a_idx)
 		{
-			f *= x.fi;
-			x.se++;
+			b_idx = distr(rng);
+		}
+		set<int> dvsrs;
+		int d = abs(a[a_idx] - a[b_idx]);
+		vi dv;
+		dv.pb(1);
+		for (auto p : pr)
+		{
+			if (d <= 1)
+			{
+				break;
+			}
+			int p_c = 0;
+			while (!(d % p))
+			{
+				d /= p;
+				p_c++;
+			}
+			int pwr = 1;
+			int d_sz = sz(dv);
+			forn(k, 0, p_c)
+			{
+				pwr *= p;
+				forn(i, 0, d_sz)
+				{
+					dv.pb(pwr * dv[i]);
+				}
+			}
+		}
+		for (auto x : dv)
+		{
+			dvsrs.insert(x);
+		}
+		for (auto itr = dvsrs.rbegin(); itr != dvsrs.rend(); itr++)
+		{
+			if (check_ok(a, *itr))
+			{
+				setmax(ans, (ll)*itr);
+				break;
+			}
 		}
 	}
-	f(pf, ans, a, 0, 1);
 	cout << ans << "\n";
-};
+}
 int main()
 {
 	ios_base::sync_with_stdio(false);
@@ -136,7 +143,7 @@ int main()
 	cout.tie(NULL);
 	int t;
 	cin >> t;
-	const int N = 1e6 + 50;
+	const int N = 2e6 + 50;
 	int lp[N + 1];
 	vector<int> pr;
 	for (int i = 2; i <= N; ++i)

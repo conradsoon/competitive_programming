@@ -22,10 +22,10 @@ using vvb = vector<vector<char>>;
 #define mp make_pair
 #define sz(c) ((int)(c).size())
 #define all(c) (c).begin(), (c).end()
-#define forn(i, a, b) for (int i = a, end = (b); i < end; i++)       //[a,b)
+#define forn(i, a, b) for (int i = a, end = (b); i < end; i++)		 //[a,b)
 #define fornr(i, a, b) for (int i = b - 1, end = (a); i >= end; i--) //[a,b) reversed
-#define repn(i, a, b) for (int i = a, end = (b); i <= end; i++)      //[a,b]
-#define repnr(i, a, b) for (int i = b, end = (a); i >= end; i--)     //[a,b] reversed
+#define repn(i, a, b) for (int i = a, end = (b); i <= end; i++)		 //[a,b]
+#define repnr(i, a, b) for (int i = b, end = (a); i >= end; i--)	 //[a,b] reversed
 #define setmin(a, b) a = min(a, (b))
 #define setmax(a, b) a = max(a, (b))
 #define NIL 0
@@ -44,22 +44,71 @@ using namespace std;
 using namespace __gnu_pbds;
 typedef tree<pair<int, int>, null_type, less<pair<int, int>>, rb_tree_tag, tree_order_statistics_node_update> ordered_set;
 
-void solve(int tc)
-{
-    int n;
-    cin >> n;
-}
-
 int main()
 {
-    ios_base::sync_with_stdio(false);
-    cin.tie(NULL);
-    cout.tie(NULL);
-    int t;
-    cin >> t;
-    repn(i, 1, t)
-    {
-        solve(i);
-    }
-    return 0;
+	ios_base::sync_with_stdio(false);
+	cin.tie(NULL);
+	cout.tie(NULL);
+	int n, m;
+	cin >> n >> m;
+	vvi adj(n);
+	vi t(n, -1);
+	forn(i, 0, m)
+	{
+		int a, b;
+		cin >> a >> b;
+		a--;
+		b--;
+		adj[a].pb(b);
+		adj[b].pb(a);
+	}
+	bool flag = false;
+	forn(i, 0, n)
+	{
+		if (flag)
+		{
+			break;
+		}
+		if (t[i] == -1)
+		{
+			queue<int> q;
+			t[i] = 1;
+			q.push(i);
+			while (!q.empty())
+			{
+				int f = q.front();
+				q.pop();
+				if (flag)
+				{
+					break;
+				}
+				for (auto x : adj[f])
+				{
+					if (t[x] == -1)
+					{
+						q.push(x);
+						t[x] = 1 ^ 2 ^ t[f];
+					}
+					else if (t[x] == t[f])
+					{
+						flag = true;
+						break;
+					}
+				}
+			}
+		}
+	}
+	if (flag)
+	{
+		cout << "IMPOSSIBLE\n";
+	}
+	else
+	{
+		for (auto x : t)
+		{
+			cout << x << " ";
+		}
+	}
+
+	return 0;
 }
