@@ -22,10 +22,10 @@ using vvb = vector<vector<char>>;
 #define mp make_pair
 #define sz(c) ((int)(c).size())
 #define all(c) (c).begin(), (c).end()
-#define forn(i, a, b) for (int i = a, __end = (b); i < __end; i++)       //[a,b)
-#define fornr(i, a, b) for (int i = b - 1, __end = (a); i >= __end; i--) //[a,b) reversed
-#define repn(i, a, b) for (int i = a, __end = (b); i <= __end; i++)      //[a,b]
-#define repnr(i, a, b) for (int i = b, __end = (a); i >= __end; i--)     //[a,b] reversed
+#define forn(i, a, b) for (int i = a, end = (b); i < end; i++)		 //[a,b)
+#define fornr(i, a, b) for (int i = b - 1, end = (a); i >= end; i--) //[a,b) reversed
+#define repn(i, a, b) for (int i = a, end = (b); i <= end; i++)		 //[a,b]
+#define repnr(i, a, b) for (int i = b, end = (a); i >= end; i--)	 //[a,b] reversed
 #define setmin(a, b) a = min(a, (b))
 #define setmax(a, b) a = max(a, (b))
 #define NIL 0
@@ -43,23 +43,50 @@ const int MAXN = 200005;
 using namespace std;
 using namespace __gnu_pbds;
 typedef tree<pair<int, int>, null_type, less<pair<int, int>>, rb_tree_tag, tree_order_statistics_node_update> ordered_set;
-
-void solve(int tc)
-{
-    int n;
-    cin >> n;
-}
+//dijkstra but with an array of path values.
 
 int main()
 {
-    ios_base::sync_with_stdio(false);
-    cin.tie(NULL);
-    cout.tie(NULL);
-    int t;
-    cin >> t;
-    repn(i, 1, t)
-    {
-        solve(i);
-    }
-    return 0;
+	ios_base::sync_with_stdio(false);
+	cin.tie(NULL);
+	cout.tie(NULL);
+	int n, m, k;
+	cin >> n >> m >> k;
+	vector<vll> adj(n);
+	forn(i, 0, m)
+	{
+		ll a, b;
+		ll x;
+		cin >> a >> b >> x;
+		a--;
+		b--;
+		adj[a].pb({b, x});
+	}
+	vl c(n, 0);
+	priority_queue<pll, vll, greater<pll>> pq;
+	pq.push({0, 0});
+	vl p;
+	while (!pq.empty() && c[n - 1] < k)
+	{
+		ll cst = pq.top().fi;
+		ll src = pq.top().se;
+		pq.pop();
+		c[src]++;
+		if (src == n - 1)
+		{
+			p.pb(cst);
+		}
+		if (c[src] <= k)
+		{
+			for (auto e : adj[src])
+			{
+				pq.push({cst + e.se, e.fi});
+			}
+		}
+	}
+	for (auto x : p)
+	{
+		cout << x << " ";
+	}
+	return 0;
 }

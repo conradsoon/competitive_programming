@@ -22,10 +22,10 @@ using vvb = vector<vector<char>>;
 #define mp make_pair
 #define sz(c) ((int)(c).size())
 #define all(c) (c).begin(), (c).end()
-#define forn(i, a, b) for (int i = a, __end = (b); i < __end; i++)       //[a,b)
+#define forn(i, a, b) for (int i = a, __end = (b); i < __end; i++)		 //[a,b)
 #define fornr(i, a, b) for (int i = b - 1, __end = (a); i >= __end; i--) //[a,b) reversed
-#define repn(i, a, b) for (int i = a, __end = (b); i <= __end; i++)      //[a,b]
-#define repnr(i, a, b) for (int i = b, __end = (a); i >= __end; i--)     //[a,b] reversed
+#define repn(i, a, b) for (int i = a, __end = (b); i <= __end; i++)		 //[a,b]
+#define repnr(i, a, b) for (int i = b, __end = (a); i >= __end; i--)	 //[a,b] reversed
 #define setmin(a, b) a = min(a, (b))
 #define setmax(a, b) a = max(a, (b))
 #define NIL 0
@@ -46,20 +46,77 @@ typedef tree<pair<int, int>, null_type, less<pair<int, int>>, rb_tree_tag, tree_
 
 void solve(int tc)
 {
-    int n;
-    cin >> n;
+	int n;
+	cin >> n;
+	string s;
+	cin >> s;
+	vvb m(n, vb(3, false)); //0 r, 1y, 2b
+	ll ans = 0;
+	forn(i, 0, n)
+	{
+		if (s[i] == 'R')
+		{
+			m[i][0] = true;
+		}
+		else if (s[i] == 'Y')
+		{
+			m[i][1] = true;
+		}
+		else if (s[i] == 'B')
+		{
+			m[i][2] = true;
+		}
+		else if (s[i] == 'O')
+		{
+			m[i][0] = true;
+			m[i][1] = true;
+		}
+		else if (s[i] == 'P')
+		{
+			m[i][0] = true;
+			m[i][2] = true;
+		}
+		else if (s[i] == 'G')
+		{
+			m[i][1] = true;
+			m[i][2] = true;
+		}
+		else if (s[i] == 'A')
+		{
+			m[i][0] = true;
+			m[i][1] = true;
+			m[i][2] = true;
+		}
+	}
+	vb a(3, false);
+	forn(i, 0, n)
+	{
+		forn(j, 0, 3)
+		{
+			if (m[i][j] && !a[j])
+			{
+				a[j] = true;
+				ans++;
+			}
+			else if (!m[i][j] && a[j])
+			{
+				a[j] = false;
+			}
+		}
+	}
+	cout << "Case #" << tc << ": " << ans << "\n";
 }
 
 int main()
 {
-    ios_base::sync_with_stdio(false);
-    cin.tie(NULL);
-    cout.tie(NULL);
-    int t;
-    cin >> t;
-    repn(i, 1, t)
-    {
-        solve(i);
-    }
-    return 0;
+	ios_base::sync_with_stdio(false);
+	cin.tie(NULL);
+	cout.tie(NULL);
+	int t;
+	cin >> t;
+	repn(i, 1, t)
+	{
+		solve(i);
+	}
+	return 0;
 }

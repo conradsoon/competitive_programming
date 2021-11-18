@@ -44,22 +44,19 @@ using namespace std;
 using namespace __gnu_pbds;
 typedef tree<pair<int, int>, null_type, less<pair<int, int>>, rb_tree_tag, tree_order_statistics_node_update> ordered_set;
 
-void solve(int tc)
-{
-    int n;
-    cin >> n;
-}
-
 int main()
 {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
     cout.tie(NULL);
-    int t;
-    cin >> t;
-    repn(i, 1, t)
+    int n, q;
+    cin >> n >> q;
+    vi t(n);
+    forn(i, 0, n)
     {
-        solve(i);
+        cin >> t[i];
+        t[i]--;
     }
+    
     return 0;
 }

@@ -22,10 +22,10 @@ using vvb = vector<vector<char>>;
 #define mp make_pair
 #define sz(c) ((int)(c).size())
 #define all(c) (c).begin(), (c).end()
-#define forn(i, a, b) for (int i = a, __end = (b); i < __end; i++)       //[a,b)
+#define forn(i, a, b) for (int i = a, __end = (b); i < __end; i++)		 //[a,b)
 #define fornr(i, a, b) for (int i = b - 1, __end = (a); i >= __end; i--) //[a,b) reversed
-#define repn(i, a, b) for (int i = a, __end = (b); i <= __end; i++)      //[a,b]
-#define repnr(i, a, b) for (int i = b, __end = (a); i >= __end; i--)     //[a,b] reversed
+#define repn(i, a, b) for (int i = a, __end = (b); i <= __end; i++)		 //[a,b]
+#define repnr(i, a, b) for (int i = b, __end = (a); i >= __end; i--)	 //[a,b] reversed
 #define setmin(a, b) a = min(a, (b))
 #define setmax(a, b) a = max(a, (b))
 #define NIL 0
@@ -46,20 +46,33 @@ typedef tree<pair<int, int>, null_type, less<pair<int, int>>, rb_tree_tag, tree_
 
 void solve(int tc)
 {
-    int n;
-    cin >> n;
+	string s;
+	string f;
+	cin >> s;
+	cin >> f;
+	ll ans = 0;
+	forn(i, 0, sz(s))
+	{
+		ll mn = INF;
+		forn(j, 0, sz(f))
+		{
+			setmin(mn, min((ll)abs(f[j] - s[i]), 26LL - abs(f[j] - s[i])));
+		}
+		ans += mn;
+	}
+	cout << "Case #" << tc << ": " << ans << "\n";
 }
 
 int main()
 {
-    ios_base::sync_with_stdio(false);
-    cin.tie(NULL);
-    cout.tie(NULL);
-    int t;
-    cin >> t;
-    repn(i, 1, t)
-    {
-        solve(i);
-    }
-    return 0;
+	ios_base::sync_with_stdio(false);
+	cin.tie(NULL);
+	cout.tie(NULL);
+	int t;
+	cin >> t;
+	repn(i, 1, t)
+	{
+		solve(i);
+	}
+	return 0;
 }
