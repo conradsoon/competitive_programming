@@ -36,7 +36,7 @@ using vvb = vector<vector<char>>;
 mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 const long double eps = 1e-9;
 const long long mod = 1000000007;
-const int MAXN = 500100;
+const int MAXN = 200005;
 
 #include <ext/pb_ds/assoc_container.hpp>
 #include <ext/pb_ds/tree_policy.hpp>
@@ -44,94 +44,64 @@ using namespace std;
 using namespace __gnu_pbds;
 typedef tree<pair<int, int>, null_type, less<pair<int, int>>, rb_tree_tag, tree_order_statistics_node_update> ordered_set;
 
-char nxc[100];
-char pvc[100];
-
 void solve(int tc)
 {
 	int n;
 	cin >> n;
-	int nx[n];
-	int pv[n];
-	char c[n];
 	string s;
 	cin >> s;
-	forn(i, 0, n)
+	list<char> l(all(s));
+	vb nx(100, 0);
+	vb pv(100, 0);
+	forn(i, 0, 10)
 	{
-		c[i] = s[i];
+		nx['0' + i] = '0' + i + 1;
+		pv['0' + i] = '0' + i - 1;
 	}
-	forn(i, 1, n)
+	nx['9'] = '0';
+	pv['0'] = '9';
+	forn(k, 0, n + 5)
 	{
-		pv[i] = i - 1;
-	}
-	pv[0] = -1;
-	forn(i, 0, n - 1)
-	{
-		nx[i] = i + 1;
-	}
-	nx[n - 1] = -1;
-	map<char, set<int>> sm;
-	forn(i, 1, n)
-	{
-		if (pvc[c[i]] == c[pv[i]])
+		for (int i = 0; i < 10; i++)
 		{
-			sm[c[i]].insert(i);
-		}
-	}
-	while (true)
-	{
-		bool flag = false;
-		for (auto kv : sm)
-		{
-			if (sz(kv.se))
+			char cr = '0' + i;
+			bool flag = false;
+			for (auto itr = ++l.begin(); itr != l.end(); itr++)
 			{
-				flag = true;
-				break;
-			}
-		}
-		if (!flag)
-		{
-			break;
-		}
-		forn(i, 0, 10)
-		{
-			for (auto p : sm[nxc['0' + i]])
-			{
-				char currc = c[p];
-				int prevp = pv[p];
-				int nextp = nx[p];
-				if (c[prevp] == pvc[currc])
+				if (flag)
 				{
-					c[prevp] = nxc[currc];
-					if (pv[prevp] != -1)
+					auto itrp1 = itr;
+					--itrp1;
+					--itrp1;
+					l.erase(itrp1, itr);
+					l.insert(itr, nx[nx[cr]]);
+					flag = false;
+				}
+				if (*itr == nx[cr])
+				{
+					auto itrp = itr;
+					--itrp;
+					if (*itrp == cr)
 					{
-						if (pvc[c[prevp]] == c[pv[prevp]])
-						{
-							sm[c[prevp]].insert(prevp);
-						}
+						flag = true;
 					}
-					nx[prevp] = nextp;
-					if (nextp != -1)
-					{
-						pv[nextp] = prevp;
-						if (nxc[c[prevp]] == c[nextp])
-						{
-							sm[c[nextp]].insert(nextp);
-						}
-					}
-					pv[p] = -1;
-					nx[p] = -1;
 				}
 			}
-			sm[nxc['0' + i]] = set<int>();
+			if (flag)
+			{
+				auto itrp1 = l.end();
+				--itrp1;
+				--itrp1;
+				l.erase(itrp1, l.end());
+				l.insert(l.end(), nx[nx[cr]]);
+				flag = false;
+			}
 		}
 	}
 	cout << "Case #" << tc << ": ";
-	int idx = 0;
-	while (idx != -1)
+	for (auto c : l)
 	{
-		cout << c[idx];
-		idx = nx[idx];
+		cout << c;
 	}
 	cout << "\n";
 }
@@ -139,19 +109,10 @@ void solve(int tc)
 int main()
 {
 	ios_base::sync_with_stdio(false);
-	//freopen("ts2_input.txt", "r", stdin);
-	//freopen("output.txt", "w", stdout);
 	cin.tie(NULL);
 	cout.tie(NULL);
 	int t;
 	cin >> t;
-	forn(i, 0, 10)
-	{
-		nxc['0' + i] = '0' + i + 1;
-		pvc['0' + i] = '0' + i - 1;
-	}
-	nxc['9'] = '0';
-	pvc['0'] = '9';
 	repn(i, 1, t)
 	{
 		solve(i);
