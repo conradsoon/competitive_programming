@@ -143,25 +143,32 @@ typedef vector<pmi> vpmi;
 int n, q, l;
 mi mlt = 1000000;
 vector<vector<int>> adj;
-vector<pair<mi, mi>> pos;
-vector<mi> oc;
-vector<mi> nooc;
+vector<vector<pair<mi, mi>>> prb;
+vector<pair<mi, mi>> absprb;
 mi one = 1;
 int timer;
 vector<int> tin, tout;
 vector<vector<int>> up;
 
+pair<mi, mi> compose(pair<mi, mi> v, pair<mi, mi> p)
+{
+	pair<mi, mi> ans;
+	ans.fi = (p.fi) * v.fi + (1 - p.fi) * v.se;
+	ans.se = (p.se) * v.fi + (1 - p.se) * v.se;
+	return ans;
+}
 void dfs(int v, int p)
 {
 	tin[v] = ++timer;
 	up[v][0] = p;
 	if (v != 0)
 	{
-		pos[v].fi = oc[v] * pos[p].fi + nooc[v] * pos[p].se;
-		pos[v].se = one - pos[v].fi;
 	}
 	for (int i = 1; i <= l; ++i)
+	{
 		up[v][i] = up[up[v][i - 1]][i - 1];
+		prb[v][i] = compose(prb[v][i - 1], prb[up[v][i - 1]][i - 1]);
+	}
 
 	for (int u : adj[v])
 	{
@@ -190,88 +197,81 @@ int lca(int u, int v)
 	}
 	return up[u][0];
 }
-
-void preprocess(int root)
+pair<mi, mi> prb2anc(int u, int anc)
 {
+	if (u == anc)
+	{
+		return {1, 0};
+	}
+	bool flag = true;
+	pair<mi, mi> ans = {0, 0};
+	//what if same?
+	for (int i = l; i >= 0; --i)
+	{
+		if (!is_ancestor(up[u][i], anc))
+		{
+			if (flag)
+			{
+				flag = false;
+				ans = prb[u][i];
+			}
+			else
+			{
+				compose(ans, prb[u][i]);
+			}
+			u = up[u][i];
+		}
+	}
+	if (flag)
+	{
+		return prb[u][0];
+	}
+	else
+	{
+		return compose(ans, prb[u][0]);
+	}
+}
+void solve(int tc)
+{
+	cin >> n >> q;
 	tin.resize(n);
 	tout.resize(n);
 	timer = 0;
 	l = ceil(log2(n));
 	up.assign(n, vector<int>(l + 1));
-	dfs(root, root);
-}
-pair<mi, mi> apply(int i, pair<mi, mi> curr_prob)
-{
-	pair<mi, mi> ans;
-	ans.fi = curr_prob.fi * oc[i] + curr_prob.se * nooc[i];
-	ans.se = 1 - ans.fi;
-	return ans;
-}
-void solve(int tc)
-{
-	cin >> n >> q;
+	prb.assign(n, vector<pair<mi, mi>>(l + 1));
 	adj.resize(n, vi());
-	pos.resize(n);
-	oc.resize(n);
-	nooc.resize(n);
-	cin >> pos[0].fi;
-	pos[0].fi /= mlt;
-	pos[0].se = one - pos[0].fi;
-	vmi ans;
+	mi rt;
+	cin >> rt;
+	rt /= mlt;
+	prb[0][0].fi = 1;
+	prb[0][0].se = 0;
 	forn(i, 1, n)
 	{
 		int temp;
 		cin >> temp;
 		temp--;
 		adj[temp].pb(i);
-		cin >> oc[i];
-		oc[i] /= mlt;
-		cin >> nooc[i];
-		nooc[i] /= mlt;
+		cin >> prb[i][0].fi;
+		prb[i][0].fi /= mlt;
+		cin >> prb[i][0].se;
+		prb[i][0].se /= mlt;
 	}
-	preprocess(0);
+	dfs(0, 0);
+	vmi ans(q);
 	forn(i, 0, q)
 	{
 		int a, b;
 		cin >> a >> b;
 		a--, b--;
 		int anc = lca(a, b);
-		vi ap;
-		vi bpv;
-		ap.reserve(n + 5);
-		bpv.reserve(n + 5);
-		int _a = a;
-		int _b = b;
-		pair<mi, mi> anc_hap = {1, 0};
-		pair<mi, mi> anc_no_hap = {0, 1};
-		while (_a != anc)
-		{
-			ap.pb(_a);
-			_a = up[_a][0];
-		}
-		reverse(all(ap));
-		pair<mi, mi> a_anc_hap = anc_hap;
-		pair<mi, mi> a_anc_no_hap = anc_no_hap;
-		for (auto x : ap)
-		{
-			a_anc_hap = apply(x, a_anc_hap);
-			a_anc_no_hap = apply(x, a_anc_no_hap);
-		}
-		while (_b != anc)
-		{
-			bpv.pb(_b);
-			_b = up[_b][0];
-		}
-		reverse(all(bpv));
-		pair<mi, mi> b_anc_hap = anc_hap;
-		pair<mi, mi> b_anc_no_hap = anc_no_hap;
-		for (auto x : bpv)
-		{
-			b_anc_hap = apply(x, b_anc_hap);
-			b_anc_no_hap = apply(x, b_anc_no_hap);
-		}
-		mi ansp = pos[anc].fi * (a_anc_hap.fi * b_anc_hap.fi) + pos[anc].se * (a_anc_no_hap.fi * b_anc_no_hap.fi);
-		ans.pb(ansp);
+		auto prbanc = prb2anc(anc, 0);
+		auto a2anc = prb2anc(a, anc);
+		auto b2anc = prb2anc(b, anc);
+		mi pt = prbanc.fi * rt + (1 - rt) * prbanc.se;
+		mi pf = 1 - pt;
+		mi an = pt * (a2anc.fi * b2anc.fi) + pf * (a2anc.se * b2anc.se);
+		ans[i] = an;
 	}
 	cout << "Case #" << tc << ": ";
 	for (auto x : ans)
@@ -286,6 +286,8 @@ int main()
 	ios_base::sync_with_stdio(false);
 	cin.tie(NULL);
 	cout.tie(NULL);
+	freopen("ts1_input.txt", "r", stdin);
+	freopen("output.txt", "w", stdout);
 	int t;
 	cin >> t;
 	repn(i, 1, t)

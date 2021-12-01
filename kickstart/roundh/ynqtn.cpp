@@ -1,22 +1,44 @@
 #include <bits/stdc++.h>
 
 using namespace std;
-vector<vector<bool>> st(6, vector<bool>(6, false));
-vector<vector<char>> an(5, vector<char>(5, 'x'));
-vector<vector<vector<char>>> ans;
-int sq = 0;
-int d = 0;
+vector<string> ans;
+vector<string> pans;
+int sq;
+int d;
+int rn;
+int cn;
+int k;
+
+vector<vector<bool>> st;
+vector<vector<char>> an;
+string prb(vector<vector<char>> a)
+{
+	string s = "";
+	for (auto l : a)
+	{
+		for (auto c : l)
+		{
+			s += c;
+		}
+		s += "\n";
+	}
+	return s;
+}
 
 void f()
 {
-	int r = sq / 5;
-	int c = sq % 5;
-	if (d == 16)
+	if (!ans.empty())
 	{
-		ans.push_back(an);
 		return;
 	}
-	if (sq == 25)
+	int r = sq / cn;
+	int c = sq % rn;
+	if (d == k)
+	{
+		ans.push_back(prb(an));
+		return;
+	}
+	if (sq == rn * cn)
 	{
 		return;
 	}
@@ -48,23 +70,38 @@ void f()
 	f();
 	sq--;
 }
+
 int main()
 {
 	ios_base::sync_with_stdio(false);
 	cin.tie(NULL);
 	cout.tie(NULL);
-	f();
-	for (auto a : ans)
+	cin >> rn >> cn;
+	if (rn % 2)
 	{
-		for (auto l : a)
+		swap(rn, cn);
+	}
+	k = rn * ((cn + 1) / 2);
+	while (true)
+	{
+		sq = 0;
+		d = 0;
+		st.assign(rn + 1, vector<bool>(cn + 1, false));
+		an.assign(rn, vector<char>(cn, 'x'));
+		f();
+		if (ans.empty())
 		{
-			for (auto c : l)
-			{
-				cout << c;
-			}
-			cout << "\n";
+			break;
 		}
-		cout << "\n";
+		swap(ans, pans);
+		ans.clear();
+		k++;
+	}
+	k--;
+	cout << k << "\n";
+	for (auto a : pans)
+	{
+		cout << a << "\n";
 	}
 	return 0;
 }
