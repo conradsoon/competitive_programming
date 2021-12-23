@@ -46,14 +46,54 @@ typedef tree<pair<int, int>, null_type, less<pair<int, int>>, rb_tree_tag, tree_
 
 int main()
 {
-	int p1 = 5;
-	int p2 = 6;
+	int p0 = 5;
+	int p1 = 6;
+	int p0s = 0;
 	int p1s = 0;
-	int p2s = 0;
 	int r = 1;
-	while (p1s < 1000 && p2s < 1000)
+	int d = 1;
+	while (true)
 	{
+		int mv = 0;
+		forn(i, 0, 3)
+		{
+			mv += d;
+			d++;
+			if (d > 100)
+			{
+				d -= 100;
+			}
+		}
+		mv %= 10;
+		if (r % 2)
+		{
+			p0 += mv;
+			if (p0 > 10)
+			{
+				p0 -= 10;
+			}
+			p0s += p0;
+		}
+		else
+		{
+			p1 += mv;
+			if (p1 > 10)
+			{
+				p1 -= 10;
+			}
+			p1s += p1;
+		}
+		if (p0s >= 1000)
+		{
+			cout << 3 * r * p1s << "\n";
+			break;
+		}
+		if (p1s >= 1000)
+		{
+			cout << 3 * r * p0s << "\n";
+			break;
+		}
+		r++;
 	}
-	freopen("output_a.txt", "w", stdout);
 	return 1;
 }
