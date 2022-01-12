@@ -24,10 +24,10 @@ using vvc = vector<vc>;
 #define mp make_pair
 #define sz(c) ((int)(c).size())
 #define all(c) (c).begin(), (c).end()
-#define forn(i, a, b) for (int i = a, __end = (b); i < __end; i++)       //[a,b)
+#define forn(i, a, b) for (int i = a, __end = (b); i < __end; i++)		 //[a,b)
 #define fornr(i, a, b) for (int i = b - 1, __end = (a); i >= __end; i--) //[a,b) reversed
-#define repn(i, a, b) for (int i = a, __end = (b); i <= __end; i++)      //[a,b]
-#define repnr(i, a, b) for (int i = b, __end = (a); i >= __end; i--)     //[a,b] reversed
+#define repn(i, a, b) for (int i = a, __end = (b); i <= __end; i++)		 //[a,b]
+#define repnr(i, a, b) for (int i = b, __end = (a); i >= __end; i--)	 //[a,b] reversed
 #define setmin(a, b) a = min(a, (b))
 #define setmax(a, b) a = max(a, (b))
 #define NIL 0
@@ -48,20 +48,49 @@ typedef tree<pair<int, int>, null_type, less<pair<int, int>>, rb_tree_tag, tree_
 
 void solve(int tc)
 {
-    int n;
-    cin >> n;
+	int n;
+	cin >> n;
+	vi ans(n, -1);
+	forn(i, 0, n)
+	{
+		vi cycle;
+		if (ans[i] == -1)
+		{
+			cout << "? " << i + 1 << endl;
+			int temp;
+			cin >> temp;
+			cycle.pb(temp);
+			while (true)
+			{
+				cout << "? " << i + 1 << endl;
+				cin >> temp;
+				cycle.pb(temp);
+				if (temp == cycle[0])
+				{
+					break;
+				}
+			}
+			forn(j, 1, sz(cycle))
+			{
+				ans[cycle[j - 1] - 1] = cycle[j];
+			}
+		}
+	}
+	cout << "! ";
+	for (auto x : ans)
+	{
+		cout << x << " ";
+	}
+	cout << endl;
 }
 
 int main()
 {
-    ios_base::sync_with_stdio(false);
-    cin.tie(NULL);
-    cout.tie(NULL);
-    int t;
-    cin >> t;
-    repn(i, 1, t)
-    {
-        solve(i);
-    }
-    return 0;
+	int t;
+	cin >> t;
+	repn(i, 1, t)
+	{
+		solve(i);
+	}
+	return 0;
 }
