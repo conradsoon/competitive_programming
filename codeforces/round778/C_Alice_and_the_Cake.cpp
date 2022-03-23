@@ -31,10 +31,10 @@ using pqg = priority_queue<T, vector<T>, greater<T>>;
 #define mp make_pair
 #define sz(c) size(c)
 #define all(c) begin(c), end(c)
-#define forn(i, a, b) for (int i = a, __end = (b); i < __end; i++)       //[a,b)
+#define forn(i, a, b) for (int i = a, __end = (b); i < __end; i++)		 //[a,b)
 #define fornr(i, a, b) for (int i = b - 1, __end = (a); i >= __end; i--) //[a,b) reversed
-#define repn(i, a, b) for (int i = a, __end = (b); i <= __end; i++)      //[a,b]
-#define repnr(i, a, b) for (int i = b, __end = (a); i >= __end; i--)     //[a,b] reversed
+#define repn(i, a, b) for (int i = a, __end = (b); i <= __end; i++)		 //[a,b]
+#define repnr(i, a, b) for (int i = b, __end = (a); i >= __end; i--)	 //[a,b] reversed
 #define fora(a, x) for (auto &a : x)
 /**
 #define setmin(a, b) a = min(a, (b))
@@ -66,14 +66,14 @@ typedef tree<pair<int, int>, null_type, less<pair<int, int>>, rb_tree_tag, tree_
 template <class T>
 std::ostream &output_iterable_single(std::ostream &stream, T &iterable)
 {
-    for (auto valIt = iterable.begin(); valIt != iterable.end(); ++valIt)
-    {
-        auto value = *valIt;
-        stream << value;
-        if (valIt != --iterable.end())
-            stream << ' ';
-    }
-    return stream;
+	for (auto valIt = iterable.begin(); valIt != iterable.end(); ++valIt)
+	{
+		auto value = *valIt;
+		stream << value;
+		if (valIt != --iterable.end())
+			stream << ' ';
+	}
+	return stream;
 }
 
 /*
@@ -86,11 +86,11 @@ std::ostream &output_iterable_single(std::ostream &stream, T &iterable)
  */
 
 #define OVERLOAD_OUTPUT_SINGLE(container)                                \
-    template <typename T>                                                \
-    std::ostream &operator<<(std::ostream &stream, container<T> &values) \
-    {                                                                    \
-        return output_iterable_single(stream, values);                   \
-    }
+	template <typename T>                                                \
+	std::ostream &operator<<(std::ostream &stream, container<T> &values) \
+	{                                                                    \
+		return output_iterable_single(stream, values);                   \
+	}
 
 OVERLOAD_OUTPUT_SINGLE(std::vector)
 OVERLOAD_OUTPUT_SINGLE(std::set)
@@ -108,14 +108,14 @@ OVERLOAD_OUTPUT_SINGLE(std::deque)
 template <typename T, size_t SIZE>
 std::ostream &operator<<(std::ostream &stream, std::array<T, SIZE> &values)
 {
-    for (auto valIt = values.begin(); valIt != values.end(); ++valIt)
-    {
-        auto value = *valIt;
-        stream << value;
-        if (valIt != values.end() - 1)
-            stream << ' ';
-    }
-    return stream;
+	for (auto valIt = values.begin(); valIt != values.end(); ++valIt)
+	{
+		auto value = *valIt;
+		stream << value;
+		if (valIt != values.end() - 1)
+			stream << ' ';
+	}
+	return stream;
 }
 
 /* Output all values in a 2-D vector.
@@ -127,20 +127,20 @@ std::ostream &operator<<(std::ostream &stream, std::array<T, SIZE> &values)
 template <typename T>
 std::ostream &operator<<(std::ostream &stream, std::vector<std::vector<T>> &grid)
 {
-    for (auto rowIt = grid.begin(); rowIt != grid.end(); ++rowIt)
-    {
-        auto row = *rowIt;
-        for (auto valIt = row.begin(); valIt != row.end(); ++valIt)
-        {
-            auto value = *valIt;
-            stream << value;
-            if (valIt != row.end() - 1)
-                stream << ' ';
-        }
-        if (rowIt != grid.end() - 1)
-            stream << '\n';
-    }
-    return stream;
+	for (auto rowIt = grid.begin(); rowIt != grid.end(); ++rowIt)
+	{
+		auto row = *rowIt;
+		for (auto valIt = row.begin(); valIt != row.end(); ++valIt)
+		{
+			auto value = *valIt;
+			stream << value;
+			if (valIt != row.end() - 1)
+				stream << ' ';
+		}
+		if (rowIt != grid.end() - 1)
+			stream << '\n';
+	}
+	return stream;
 }
 
 // END COUT FUNCTIONS
@@ -161,15 +161,15 @@ std::ostream &operator<<(std::ostream &stream, std::vector<std::vector<T>> &grid
 template <typename T>
 std::istream &operator>>(std::istream &stream, std::vector<T> &values)
 {
-    if (values.size() == 0)
-    {
-        unsigned int N;
-        stream >> N;
-        values.resize(N);
-    }
-    for (auto &ele : values)
-        stream >> ele;
-    return stream;
+	if (values.size() == 0)
+	{
+		unsigned int N;
+		stream >> N;
+		values.resize(N);
+	}
+	for (auto &ele : values)
+		stream >> ele;
+	return stream;
 }
 
 /* Read all values into a 2-D vector.
@@ -185,18 +185,18 @@ std::istream &operator>>(std::istream &stream, std::vector<T> &values)
 template <typename T>
 std::istream &operator>>(std::istream &stream, std::vector<std::vector<T>> &values)
 {
-    if (values.size() == 0)
-    {
-        unsigned int R, C;
-        stream >> R >> C;
-        values.resize(R);
-        for (auto &row : values)
-            row.resize(C);
-    }
-    for (auto &row : values)
-        for (auto &val : row)
-            stream >> val;
-    return stream;
+	if (values.size() == 0)
+	{
+		unsigned int R, C;
+		stream >> R >> C;
+		values.resize(R);
+		for (auto &row : values)
+			row.resize(C);
+	}
+	for (auto &row : values)
+		for (auto &val : row)
+			stream >> val;
+	return stream;
 }
 
 /* Read all values into a 1-D array.
@@ -208,31 +208,56 @@ std::istream &operator>>(std::istream &stream, std::vector<std::vector<T>> &valu
 template <typename T, size_t SIZE>
 std::istream &operator>>(std::istream &stream, std::array<T, SIZE> &array)
 {
-    for (auto &val : array)
-        stream >> val;
-    return stream;
+	for (auto &val : array)
+		stream >> val;
+	return stream;
 }
 
 // END CIN FUNCTIONS
 
 #define FAST_IO                            \
-    std::ios_base::sync_with_stdio(false); \
-    cin.tie(NULL);                         \
-    cout.tie(NULL)
+	std::ios_base::sync_with_stdio(false); \
+	cin.tie(NULL);                         \
+	cout.tie(NULL)
 #define yn(flag) ((flag) ? "YES" : "NO")
 #define sgn(x) (((x) > 0) ? 1 : (((x) < 0) ? -1 : 0))
 
 void solve(int tc)
 {
-    int n;
-    cin >> n;
+	int n;
+	cin >> n;
+	vl a(n);
+	for (auto &x : a)
+	{
+		cin >> x;
+	}
+	pqg<ll> prq;
+	for (auto &x : a)
+	{
+		prq.push(x);
+	}
+	while (prq.size() > 1)
+	{
+		ll t1 = prq.top();
+		prq.pop();
+		ll t2 = prq.top();
+		prq.pop();
+		if (t2 - t1 > 1)
+		{
+			cout << "NO\n";
+			return;
+		}
+		prq.push(t1 + t2);
+	}
+	cout << "YES\n";
+	return;
 }
 
 int main()
 {
-    FAST_IO;
-    int t;
-    cin >> t;
-    repn(i, 1, t) solve(i);
-    return 0;
+	FAST_IO;
+	int t;
+	cin >> t;
+	repn(i, 1, t) solve(i);
+	return 0;
 }

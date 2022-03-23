@@ -226,6 +226,32 @@ void solve(int tc)
 {
     int n;
     cin >> n;
+    vl a(n);
+    for (auto &x : a)
+    {
+        cin >> x;
+    }
+    pll mx1 = {0, -1};
+    pll mx2 = {0, -1};
+    forn(i, 0, n)
+    {
+        if (a[i] > mx1.fi)
+        {
+            mx1 = {a[i], i};
+        }
+    }
+    forn(i, 0, n)
+    {
+        if (mx1.se == i)
+        {
+            continue;
+        }
+        if (a[i] > mx2.fi)
+        {
+            mx2 = {a[i], i};
+        }
+    }
+    cout << mx1.fi + mx2.fi << "\n";
 }
 
 int main()
